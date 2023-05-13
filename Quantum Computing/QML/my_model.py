@@ -86,10 +86,10 @@ class quantum_model:
     print_metrics_test(None, metrics_test(self.weights, X_test, Y_test, self.n_circuits))
 
   def quick_fit(self, data_tuple, alpha = 0.1, n_epochs = 10, display = False):
-    self.weights = quick_train_model(self.beta_func, data_tuple, self.n_circuits, self.weights, alpha = alpha, n_epochs = n_epochs, display = display)
+    self.weights = quick_train_model(data_tuple, self.n_circuits, self.weights, alpha = alpha, n_epochs = n_epochs, display = display)
 
   def fit(self, data_tuple, alpha = 0.1, n_epochs = 10, display = True):
-    self.weights, df_tuple = train_model(self.beta_func, data_tuple, self.n_circuits, self.weights, alpha = alpha, n_epochs = n_epochs, display = display)
+    self.weights, df_tuple = train_model(data_tuple, self.n_circuits, self.weights, alpha = alpha, n_epochs = n_epochs, display = display)
     train_plots, train_plot_list = make_train_plots(df_tuple, self.n_circuits)
     self.w_df, self.m_df, self.e_df, self.b_df = df_tuple
     self.plot_list.extend(train_plot_list)
