@@ -1,0 +1,42 @@
+#https://colab.research.google.com/drive/1EfWsR4TM481QTGTtIXoG_QP-i2tEX7lv
+
+# Quantum Machine Learning Neural Network
+
+## References
+"""
+# https://arxiv.org/pdf/2007.14044.pdf
+# https://pennylane.ai/qml/demos/tutorial_backprop.html
+# https://pennylane.ai/qml/demos/tutorial_variational_classifier.html
+# https://towardsdatascience.com/optimizers-for-training-neural-network-59450d71caf6
+# https://pennylane.readthedocs.io/en/tutorials-rotoselect/tutorials/pennylane_run_rotoselect.html
+# https://conference.ippp.dur.ac.uk/event/929/attachments/3968/4559/piotr_gawron_quantum_neural_networks.pdf
+"""
+#from qiskit import IBMQ
+#from qiskit import QuantumCircuit
+#from qiskit import QuantumRegister
+#from qiskit import ClassicalRegister
+
+#"default.qubit", "qiskit.aer"
+
+#IBMQ.save_account('Insert Token Here')
+
+#dev = qml.device('qiskit.ibmq', wires=2, backend='ibmq_santiago', shots=5)
+#dev = qml.device('qiskit.ibmq', wires=2, backend='ibmq_qasm_simulator', shots=3)
+
+#dev.capabilities()['backend']
+#@qml.qnode(dev, diff_method = "parameter-shift")
+
+# Adjusts all parameters in a given circuit using the gradient to 'optimize' or 'de-optimize'
+def step_function(features, params, alpha= 0.1, beta = None):
+  # Each dependent variable will have possible targets that span that variable (possible values of the variable)
+  # Each circuit can be 'optimized' to a specific target or 'de-optimized' to a specific target
+
+  # Each parameter is 'optimized' by moving in the positive direction (positive gradient) or 'de-optimized' by...
+  # moving in the negative direction (negative gradient)
+
+  if beta is None:
+    params += alpha*parameter_shift(features, params)
+  else:
+    params += (-alpha*beta)*parameter_shift(features, params)
+
+  return params
