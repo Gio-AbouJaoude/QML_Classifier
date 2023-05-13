@@ -52,7 +52,7 @@ def quick_train_model(data_tuple, n_circuits, weights, alpha = 0.1, n_epochs = 1
     # Iterate through the training data set
     for i in range(len(X_train)):
       # Optimize the classifier
-      weights, _, _ = optimize_model(X_train[i], Y_train[i], weights, n_circuits, alpha = alpha)
+      weights, _, = optimize_model(X_train[i], Y_train[i], weights, n_circuits, alpha = alpha)
       #print("--- %s seconds ---" % (time.time() - start_time))
 
   print_metrics_test(n+1, metrics_test(weights, X_test, Y_test, n_circuits)) if display else None # Printing is optional

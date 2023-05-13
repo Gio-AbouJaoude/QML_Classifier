@@ -85,6 +85,7 @@ def calc_expectations_all(all_features, weights, n_circuits):
 
   return all_expectations
 
+# TODO
 # def thread_calc_expectations_all(all_features, weights, n_circuits, num_threads):
 #   threading_pool = call_thread_pool(processes = num_threads)
 #   input_list = [(features, params, i) for i in range(len(params))]

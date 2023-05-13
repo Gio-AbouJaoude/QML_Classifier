@@ -10,7 +10,7 @@ os_directory = os.getcwd()
 
 
 def get_model_dir():
-  return os_directory
+  return os.path.dirname(os_directory) +'\\Models'
 
 def get_blueprint_dir():
   return os.path.dirname(os.path.realpath(my_circuit_blueprint.__file__)) + "\\my_circuit_blueprint.py"
