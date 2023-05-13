@@ -7,8 +7,6 @@ import my_training
 import my_circuit_blueprint
 
 # pytest -p no:warnings
-# cd "OneDrive\Desktop\Quantum Computing\QML"
-# C:\Users\gga22\OneDrive\Desktop\Quantum Computing\QML
 
 def test_circuit():
     num_circuit = 2
