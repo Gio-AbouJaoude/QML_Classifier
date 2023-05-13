@@ -1,7 +1,7 @@
 
 import numpy as np
 from multiprocessing.pool import Pool as call_thread_pool
-from my_circuit_blueprint import qml, dev, circuit, circuit_name, num_feat, num_params, thread_count # Keep qml & dev
+from my_circuit_blueprint import qml, dev, circuit, num_feat, num_params, thread_count # Keep qml & dev
 
 # Calculates the gradient of a single parameter 
 def parameter_shift_term(features, params, i):

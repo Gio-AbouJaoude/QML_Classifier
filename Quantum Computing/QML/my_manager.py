@@ -4,9 +4,9 @@ import pickle
 import numpy as np
 import pandas as pd
 import my_circuit_blueprint
-from my_circuit_blueprint import qml, dev, circuit, circuit_name, num_params, num_feat, thread_count, circuit_name, num_wires
+from my_circuit_blueprint import qml, dev, circuit, circuit_name, num_params, num_feat, thread_count, num_wires # Keep qml & dev
 
-os_directory = 'c:\\Users\\gga22\\OneDrive\\Desktop\\Quantum Computing\\Models'
+os_directory = os.getcwd()
 
 
 def get_model_dir():
