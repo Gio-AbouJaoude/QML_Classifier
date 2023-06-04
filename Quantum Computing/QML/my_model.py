@@ -4,8 +4,8 @@ from my_training import train_model, quick_train_model
 from my_data import q_scale_data, target_data, split_data
 from my_metrics import print_df_stats, metrics_test, print_metrics_test
 from my_plots import plotly_scatter, make_train_plots, decision_plots, print_fig_dict
+from my_qml import make_weights, predict, predict_all, calc_expectations, calc_expectations_all
 from my_manager import save_version, save_recordings, load_recordings, get_circuit_settings, get_model_dir
-from my_qml import make_weights, predict, predict_all, calc_expectations, calc_expectations_all, circuit
 
 
 class quantum_model:

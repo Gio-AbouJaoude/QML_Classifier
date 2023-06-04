@@ -24,7 +24,7 @@ def percent(value):
   return str(round(value*100, 2)) +'%'
 
 # Helper/utility function for printing metrics dictionary
-def print_metrics_test(epoch, metrics):
+def print_metrics_test(epoch, metrics, time_diff = None):
 
   f1 = percent(metrics['F1-Score'])
   recall = percent(metrics['Recall'])
@@ -42,7 +42,12 @@ def print_metrics_test(epoch, metrics):
   print(f"Accuracy: {accuracy}  |  Precision: {precision}  |  Recall: {recall}  |  F1: {f1}")
   print("Confusion Matrix: ")
   print(conf_mtx)
-  print("**************************************************************************")
+  if time_diff:
+    print("--------------------------------------------------------------------------")
+  else:
+     print("**************************************************************************")
+  print(f"                      Epoch time : {round(time_diff, 2)} seconds         ") if time_diff else None
+  print("**************************************************************************") if time_diff else None
 
 # Calculate statistics for a one dimensional array of data
 def get_col_stats(df_col, window_frac = 6):

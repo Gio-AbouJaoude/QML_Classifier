@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import time as timer
 from my_circuit_blueprint import num_params
 from my_qml import step_function, calc_expectations
 from my_metrics import metrics_test, print_metrics_test
@@ -44,18 +45,20 @@ def quick_train_model(data_tuple, n_circuits, weights, alpha = 0.1, n_epochs = 1
   X_train, X_test, Y_train, Y_test = data_tuple
 
   # Train for several epochs, each epoch is going through the training data set once
-  #start_time = time.time()
+  start_time = timer.time()
   for n in range(n_epochs):
+    metrics = metrics_test(weights, X_test, Y_test, n_circuits)
+    print_metrics_test(n, metrics, time_diff = timer.time() - start_time) if display else None # Printing is optional
 
-    print_metrics_test(n, metrics_test(weights, X_test, Y_test, n_circuits)) if display else None # Printing is optional
-
+    start_time = timer.time()
     # Iterate through the training data set
     for i in range(len(X_train)):
       # Optimize the classifier
       weights, _, = optimize_model(X_train[i], Y_train[i], weights, n_circuits, alpha = alpha)
       #print("--- %s seconds ---" % (time.time() - start_time))
-
-  print_metrics_test(n+1, metrics_test(weights, X_test, Y_test, n_circuits)) if display else None # Printing is optional
+  
+  metrics = metrics_test(weights, X_test, Y_test, n_circuits)
+  print_metrics_test(n+1, metrics, time_diff = timer.time() - start_time) if display else None # Printing is optional
 
   return weights
 
