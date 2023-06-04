@@ -76,7 +76,7 @@ def train_model(data_tuple, n_circuits, weights, alpha = 0.1, n_epochs = 10, dis
   metric_names = ['Accuracy', 'Precision', 'Recall', 'F1-Score']
   weight_names = [f"C_{i}_w_{j}" for i in range(n_circuits) for j in range(num_params)]
 
-
+  start_time = timer.time()
   train_data_length = len(X_train)
   record_length = train_data_length*n_epochs +1
   metrics = metrics_test(weights, X_test, Y_test, n_circuits)
@@ -96,8 +96,9 @@ def train_model(data_tuple, n_circuits, weights, alpha = 0.1, n_epochs = 10, dis
   # Train for several epochs, each epoch is going through the training data set once
   for n in range(n_epochs):
     
-    print_metrics_test(n, metrics) if display else None # Printing is optional
+    print_metrics_test(n, metrics, time_diff = timer.time() - start_time) if display else None # Printing is optional
 
+    start_time = timer.time()
     # Iterate through the training data set
     for i in range(train_data_length):
 
@@ -113,7 +114,7 @@ def train_model(data_tuple, n_circuits, weights, alpha = 0.1, n_epochs = 10, dis
       metric_data[row_num] = get_metric_record(metrics)
       weight_data[row_num] = get_weight_record(weights)
 
-  print_metrics_test(n+1, metrics) if display else None # Printing is optional
+  print_metrics_test(n+1, metrics, time_diff = timer.time() - start_time) if display else None # Printing is optional
 
   # Convert the records of the weights and metrics to dataframe form for easier study, can be easily commented out
 
