@@ -1,35 +1,41 @@
 
-from numpy import unique
 from pandas import DataFrame
 from my_qml import predict_all
-from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import confusion_matrix, classification_report
 
-# Generate standard classification metrics in a dictionary
-def metrics_test(weights, X_test, Y_test, n_circuits, method = 'weighted'):
+def metrics_test(weights, X_test, Y_test, n_circuits):
+  # Calculate and return various classification metrics for the model's predictions on the test set
 
-  Y_estimate = predict_all(X_test, weights, n_circuits) # Estimate dependent variable for every row in the test set
+  labels = [i for i in range(n_circuits)]
+  Y_estimate = predict_all(X_test, weights, n_circuits)
+  metrics = classification_report(Y_test, Y_estimate, labels=labels, output_dict=True, zero_division=0)
 
-  # The estimated variable and the actual variable are used to calculate/generate metrics for the classifier
-
-  metrics = {}
-  metrics['Accuracy'] = accuracy_score(Y_test, Y_estimate)
+  # Rename 'accuracy' key to 'model_accuracy'
+  metrics['model_accuracy'] = metrics.pop('accuracy')
   metrics['ConfMatrix'] = confusion_matrix(Y_test, Y_estimate)
-  metrics['F1-Score'] = f1_score(Y_test, Y_estimate, average = method)
-  metrics['Recall'] = recall_score(Y_test, Y_estimate, average = method)
-  metrics['Precision'] = precision_score(Y_test, Y_estimate, average = method, labels = unique(Y_estimate))
-  
-  return metrics # Return dictionary of metrics
+
+  # Extract and format precision, recall, and f1-score for each target class and model averages
+  for target in range(n_circuits):
+    target_metric_dic = metrics.pop(f"{target}")
+    for metric_name in ['precision', 'recall', 'f1-score']:
+      metrics[f"C_{target}_{metric_name}"] = target_metric_dic[metric_name]
+  for model_metric in ['macro avg', 'weighted avg']:
+    model_metric_dic = metrics.pop(model_metric)
+    for metric_name in ['precision', 'recall', 'f1-score']:
+      metrics[f"{model_metric}_{metric_name}"] = model_metric_dic[metric_name]
+  return metrics
 
 def percent(value):
+  # Convert a decimal value to a percentage string representation
   return str(round(value*100, 2)) +'%'
 
-# Helper/utility function for printing metrics dictionary
 def print_metrics_test(epoch, metrics, time_diff = None):
+  # Print the metrics dictionary along with additional information
 
-  f1 = percent(metrics['F1-Score'])
-  recall = percent(metrics['Recall'])
-  accuracy = percent(metrics['Accuracy'])
-  precision = percent(metrics['Precision'])
+  accuracy = percent(metrics['model_accuracy'])
+  f1 = percent(metrics['weighted avg_f1-score'])
+  recall = percent(metrics['weighted avg_recall'])
+  precision = percent(metrics['weighted avg_precision'])
   
   width = len(metrics['ConfMatrix'][0])
   index_vec = ['true: ' + str(i) for i in range(width)]
@@ -49,8 +55,9 @@ def print_metrics_test(epoch, metrics, time_diff = None):
   print(f"                      Epoch time : {round(time_diff, 2)} seconds         ") if time_diff else None
   print("**************************************************************************") if time_diff else None
 
-# Calculate statistics for a one dimensional array of data
+
 def get_col_stats(df_col, window_frac = 6):
+  # Calculate and return various statistics for a one-dimensional dataframe column
   stats = {}
   stats['mean'] = df_col.mean()
   stats['minimum'] = min(df_col)
@@ -69,17 +76,16 @@ def get_col_stats(df_col, window_frac = 6):
     end = end + window
   return stats # Returns a dictionary
 
-# Calculate statistics for every column in a dataframe
 def get_df_stats(df, window_frac = 6):
-
+  # Calculate and return various statistics for each column in a dataframe
   all_stats = {}
   for i, col in enumerate(df.columns):
     all_stats[f'Stats_{i}'] = get_col_stats(df[col], window_frac = window_frac)
 
   return all_stats # Returns a dictionary of dictionaries
 
-# Prints the statistics from a one dimensional array stored in a dictionary
 def print_col_stats(stats):
+  # Print the statistics from a one-dimensional array stored in a dictionary
   significant_digits = 4
   print("Mean Value: ", round(stats['mean'], significant_digits))
   print("Variance Value: ", round(stats['variance'], significant_digits))
@@ -87,8 +93,8 @@ def print_col_stats(stats):
   print("Mean Windows (" + str(len(stats['mean windows'])) + "): ", [round(mean, significant_digits) for mean in stats['mean windows']])
   print("Variance Windows (" + str(len(stats['variance windows'])) +"): ", [round(var, significant_digits) for var in stats['variance windows']])
 
-# Print the statistics from a dataframe stored in a dictionary of dictionaries
 def print_df_stats(df, window_frac = 6):
+  # Print the statistics from a dataframe stored in a dictionary of dictionaries
   df_stats = get_df_stats(df, window_frac = window_frac)
   print("*************************************"*2)
   for col in df_stats:

@@ -1,9 +1,12 @@
 import numpy as np
 import pandas as pd
 import time as timer
+from warnings import simplefilter
 from my_circuit_blueprint import num_params
 from my_qml import step_function, calc_expectations
 from my_metrics import metrics_test, print_metrics_test
+
+simplefilter(action="ignore", category=pd.errors.PerformanceWarning)
 
 # --- Possible Beta Functions ---
 # expectations[target] - 1 # Delta 
@@ -32,8 +35,16 @@ def get_weight_record(weights):
   return list(np.concatenate(weights))
 
 # Record the metrics of the classifier in an array
-def get_metric_record(metrics):
-  return [metrics['Accuracy'], metrics['Precision'], metrics['Recall'], metrics['F1-Score']]
+def get_metric_record(metrics, return_names = False):
+  record = []
+  record_names = []
+  for key in metrics.keys():
+    if 'ConfMatrix' != key:
+      record_names.append(key)
+      record.append(metrics[key])    
+  if return_names:
+    return record, record_names
+  return record
 
 def blank_matrix(n_rows, n_cols):
   return np.zeros([n_rows, n_cols], dtype = float)
@@ -67,14 +78,8 @@ def train_model(data_tuple, n_circuits, weights, alpha = 0.1, n_epochs = 10, dis
 
   n = -1
   row_num = 0
-  num_metric_values = 4
+  num_metric_values = 7+3*n_circuits
   X_train, X_test, Y_train, Y_test = data_tuple
-
-
-  beta_names = ["Beta Values"]
-  expect_names = [f"C_{i}_expect" for i in range(n_circuits)]
-  metric_names = ['Accuracy', 'Precision', 'Recall', 'F1-Score']
-  weight_names = [f"C_{i}_w_{j}" for i in range(n_circuits) for j in range(num_params)]
 
   start_time = timer.time()
   train_data_length = len(X_train)
@@ -90,8 +95,12 @@ def train_model(data_tuple, n_circuits, weights, alpha = 0.1, n_epochs = 10, dis
   # Record the weights and metrics for the class in array form, this and every other recording can be recoded to write to an external file
   beta_data[row_num] = 0
   expect_data[row_num] = [0]*n_circuits
-  metric_data[row_num] = get_metric_record(metrics)
   weight_data[row_num] = get_weight_record(weights)
+  metric_data[row_num], metric_names = get_metric_record(metrics, return_names = True) 
+
+  beta_names = ["Beta Values"]
+  expect_names = [f"C_{i}_expect" for i in range(n_circuits)]
+  weight_names = [f"C_{i}_w_{j}" for i in range(n_circuits) for j in range(num_params)]
 
   # Train for several epochs, each epoch is going through the training data set once
   for n in range(n_epochs):
