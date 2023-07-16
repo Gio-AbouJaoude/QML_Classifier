@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 import pandas as pd
 import my_circuit_blueprint
-from my_circuit_blueprint import qml, dev, sub_circuits, circuit_name, num_params, num_feat, thread_count, num_wires # Keep qml & dev
+from my_circuit_blueprint import qml, dev, sub_circuits, circuit_name, num_params, num_feat, thread_count, num_wires, layers # Keep qml & dev
 
 os_directory = os.getcwd()
 
@@ -150,6 +150,22 @@ def get_circuit_settings():
   # Returns a formatted string containing the circuit settings
   return f"{name_str}\n{num_threads_str} || {num_wires_str} || {num_feats_str} || {num_params_str}"
 
+def get_model_arch():
+  tab = 0
+  model_arch_str = ''
+  num_layers = len(layers)
+  for layer in layers:
+    layer_str = ''
+    model_arch_str += ' '*tab +'['
+    for i in range(len(layer)):
+      circuit, features, params = layer[i]
+      circuit_str = f"({circuit.__name__}, {features}, {params})"
+      model_arch_str += circuit_str
+      layer_str += circuit_str
+    model_arch_str += ']\n'
+    tab += len(layer_str)//num_layers
+  return model_arch_str
+
 def fill_settings(folder_dir):
   # Changes the current working directory to `folder_dir`
   os.chdir(folder_dir)
@@ -159,14 +175,19 @@ def fill_settings(folder_dir):
     # Writes the circuit settings string to the "circuit_settings.txt" file
     print(circuit_settings, file=file)
     # Adds a separator line to the file
-    print('-' * 200, file=file)
+    print('-' * 180, file=file)
     for sub_circ_dict in sub_circuits:
       # Gets the sub-circuit settings string
       sub_circuit_settings = get_sub_circuit_settings(sub_circ_dict)
       # Writes the sub-circuit settings string to the file
       print(sub_circuit_settings, file=file)
       # Adds a separator line to the file
-      print('-' * 200, file=file)
+      print('-' * 180, file=file)
+    # Writes the model architecture string to the file
+    print("Model Architecture:", file=file)
+    print(get_model_arch(), file=file)
+    # Adds a separator line to the file
+    print('-' * 180, file=file)
 
 def get_func_blueprint():
   with open(get_blueprint_dir(), "r", encoding="utf-8") as file:
