@@ -1,96 +1,88 @@
 import numpy as np
 import pennylane as qml
 
-num_wires = 2
+num_wires = 4
 device_name = 'qulacs.simulator'
 dev = qml.device(device_name, wires = num_wires)
 
-@qml.qnode(dev) # 4, 8
-def iris_circuit(features, params):
+#QML Circuit
+@qml.qnode(dev)
+def peng_circuit(features, params):
   
   qml.RX(features[0], wires = 0)
   qml.RX(features[1], wires = 1)
+  qml.RX(features[2], wires = 2)
+  qml.RX(features[3], wires = 3)
 
-  qml.broadcast(qml.CZ, wires = [0, 1], pattern="ring")
+  qml.broadcast(qml.CZ, wires = [0, 1], pattern = "ring")
+  qml.broadcast(qml.CZ, wires = [2, 3], pattern = "ring")
 
   qml.RX(params[0], wires = 0)
   qml.RX(params[1], wires = 1)
+  qml.RX(params[2], wires = 2)
+  qml.RX(params[3], wires = 3)
 
-  qml.broadcast(qml.CZ, wires = [1, 0], pattern="ring")
+  qml.broadcast(qml.CZ, wires = [1, 2], pattern = "ring")
+  qml.broadcast(qml.CZ, wires = [0, 3], pattern = "ring")
 
-  qml.RX(features[2], wires = 0)
-  qml.RX(features[3], wires = 1)
+  qml.RX(features[4], wires = 0)
+  qml.RX(features[5], wires = 1)
+  qml.RX(features[6], wires = 2)
+  qml.RX(features[7], wires = 3)
 
-  qml.broadcast(qml.CZ, wires = [0, 1], pattern="ring")
-
-  qml.RX(params[2], wires = 0)
-  qml.RX(params[3], wires = 1)
-
-  qml.broadcast(qml.CZ, wires = [1, 0], pattern="ring")
-
-  qml.RX(features[0], wires = 0)
-  qml.RX(features[1], wires = 1)
-
-  qml.broadcast(qml.CZ, wires = [0, 1], pattern="ring")
+  qml.broadcast(qml.CZ, wires = [3, 1], pattern = "ring")
+  qml.broadcast(qml.CZ, wires = [2, 0], pattern = "ring")
 
   qml.RX(params[4], wires = 0)
   qml.RX(params[5], wires = 1)
+  qml.RX(params[6], wires = 2)
+  qml.RX(params[7], wires = 3)
 
-  qml.broadcast(qml.CZ, wires = [1, 0], pattern="ring")
+  qml.broadcast(qml.CZ, wires = [0, 1], pattern = "ring")
+  qml.broadcast(qml.CZ, wires = [2, 3], pattern = "ring")
 
-  qml.RX(features[2], wires = 0)
-  qml.RX(features[3], wires = 1)
+  qml.RX(features[0], wires = 0)
+  qml.RX(features[1], wires = 1)
+  qml.RX(features[2], wires = 2)
+  qml.RX(features[3], wires = 3)
 
-  qml.broadcast(qml.CZ, wires = [0, 1], pattern="ring")
+  qml.broadcast(qml.CZ, wires = [1, 2], pattern = "ring")
+  qml.broadcast(qml.CZ, wires = [0, 3], pattern = "ring")
 
-  qml.RX(params[6], wires = 0)
+  qml.RX(params[8], wires = 0)
+  qml.RX(params[9], wires = 1)
+  qml.RX(params[10], wires = 2)
+  qml.RX(params[11], wires = 3)
 
-  return qml.expval(qml.PauliZ(0))
+  qml.broadcast(qml.CZ, wires = [3, 1], pattern = "ring")
+  qml.broadcast(qml.CZ, wires = [2, 0], pattern = "ring")
 
+  qml.RX(features[4], wires = 0)
+  qml.RX(features[5], wires = 1)
+  qml.RX(features[6], wires = 2)
+  qml.RX(features[7], wires = 3)
 
-# @qml.qnode(dev) # 3, 6
-# def odd_circuit(features, params):
-#     # Quantum node for the odd circuit
-#     qml.RX(features[0], wires = 0)
-#     qml.RX(features[1], wires = 1)
-#     qml.RX(features[2], wires = 2)
+  qml.broadcast(qml.CZ, wires = [0, 1], pattern = "ring")
+  qml.broadcast(qml.CZ, wires = [2, 3], pattern = "ring")
 
-#     qml.broadcast(qml.CZ, wires = [0, 1], pattern = "ring")
-#     qml.broadcast(qml.CZ, wires = [1, 2], pattern = "ring")
+  qml.RX(params[12], wires = 0)
+  qml.RX(params[13], wires = 1)
+  qml.RX(params[14], wires = 2)
+  qml.RX(params[15], wires = 3)
 
-#     qml.RX(params[0], wires = 0)
-#     qml.RX(params[1], wires = 1)
-#     qml.RX(params[2], wires = 2)
-
-#     qml.broadcast(qml.CZ, wires = [1, 2], pattern = "ring")
-#     qml.broadcast(qml.CZ, wires = [2, 0], pattern = "ring")
-
-#     qml.RX(features[0], wires = 0)
-#     qml.RX(features[1], wires = 1)
-#     qml.RX(features[2], wires = 2)
-
-#     qml.broadcast(qml.CZ, wires = [2, 0], pattern = "ring")
-#     qml.broadcast(qml.CZ, wires = [0, 1], pattern = "ring")
-
-#     qml.RX(params[3], wires = 0)
-#     qml.RX(params[4], wires = 1)
-#     qml.RX(params[5], wires = 2)
-
-#     return qml.expval(qml.PauliZ(0) @ qml.PauliZ(1) @ qml.PauliZ(2))
+  return qml.expval(qml.PauliZ(0) @ qml.PauliZ(1) @ qml.PauliZ(2) @ qml.PauliZ(3))
 
 
-num_feat = 64
-num_params = 147
+num_feat = 8
+num_params = 16
 thread_count = 0
-circuit_name = "Network-Digits V_4"
-sub_circuits = [{'Circuit Name': 'Iris Circuit','Circuit Function': iris_circuit, 'Features': 4, 'Parameters': 7, 'Wires': 2}]
+circuit_name = "Penguin V_4"
+sub_circuits = [{'Circuit Name': 'Penguin Circuit', 'Circuit Function': peng_circuit, 'Features': 8, 'Parameters': 16, 'Wires': 4}]
 
-layer_a = [(iris_circuit,4,7)]*16
-layer_b = [(iris_circuit,4,7)]*4
-layer_c = [(iris_circuit,4,7)]*1
+layer_0 = [(peng_circuit,8,16)]*1
 
 
-layers = [layer_a, layer_b, layer_c]
+layers = [layer_0]
 
 
 

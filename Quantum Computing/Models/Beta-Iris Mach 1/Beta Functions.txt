@@ -1,6 +1,0 @@
-def beta_function(target, expectations, n_circuits):
-  #return expectations[target] - 1 # Delta 
-  return sum(expectations)/n_circuits - 1 #Theta
-  #return expectations[target]/n_circuits - 1 #Mu
-  #return expectations[target]/sum(expectations) - 1 #Classic
-  #return (sum(expectations) - expectations[target])/n_circuits - 1 #Tau
