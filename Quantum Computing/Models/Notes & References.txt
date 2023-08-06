@@ -1,5 +1,3 @@
-#https://colab.research.google.com/drive/1EfWsR4TM481QTGTtIXoG_QP-i2tEX7lv
-
 # Quantum Machine Learning Neural Network
 
 ## References
@@ -25,18 +23,3 @@
 
 #dev.capabilities()['backend']
 #@qml.qnode(dev, diff_method = "parameter-shift")
-
-# Adjusts all parameters in a given circuit using the gradient to 'optimize' or 'de-optimize'
-def step_function(features, params, alpha= 0.1, beta = None):
-  # Each dependent variable will have possible targets that span that variable (possible values of the variable)
-  # Each circuit can be 'optimized' to a specific target or 'de-optimized' to a specific target
-
-  # Each parameter is 'optimized' by moving in the positive direction (positive gradient) or 'de-optimized' by...
-  # moving in the negative direction (negative gradient)
-
-  if beta is None:
-    params += alpha*parameter_shift(features, params)
-  else:
-    params += (-alpha*beta)*parameter_shift(features, params)
-
-  return params
