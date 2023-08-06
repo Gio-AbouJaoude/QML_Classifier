@@ -1,4 +1,0 @@
-Model: Beta-Moon V2_2
-Num Wires: 2 || Num Threads: 0 || Num Features: 2 (x_00) || Num Parameters: 5 (weight_00)
-0: ──RX(x_00)─╭●──RX(weight_00)─╭Z──RX(x_00)─╭●──RX(weight_02)─╭Z──RX(x_00)─╭●──RX(weight_04)─╭Z─┤  <Z>
-1: ──RX(x_01)─╰Z──RX(weight_01)─╰●──RX(x_01)─╰Z──RX(weight_03)─╰●──RX(x_01)─╰Z────────────────╰●─┤     
